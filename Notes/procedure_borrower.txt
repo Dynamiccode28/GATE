@@ -1,0 +1,48 @@
+create table borrower (
+rollin int,
+name varchar(20),
+dateofIssue date,
+bname varchar(20),
+status char(1)
+);
+
+create table fine (
+rollno int,
+fdate date,
+amt int
+);
+
+insert into borrower values(1, 'a', '2018-07-01', 'java', 'I');
+insert into borrower values(2, 'b', '2018-05-01', 'cpp', 'I');
+insert into borrower values(3, 'c', '2018-07-12', 'clrs', 'I');
+insert into borrower values(4, 'd', '2018-06-02', 'dsa', 'I');
+insert into borrower values(5, 'e', '2018-08-04', 'oops', 'I');
+
+select * from borrower;
+
+delimiter $
+create procedure fine_calculation(IN rno int(3), bname char(20))
+begin
+declare i_date date;
+declare diff int;
+declare fine_amt int;
+declare exit handler for sqlexception select 'Table not Found';
+select dateofIssue into i_date from borrower where rollin = rno and bname = bname;
+select datediff(curdate(), i_date) into diff;
+if (diff > 15 and diff <= 30) then
+set fine_amt = diff * 5;
+insert into fine values(rno, curdate(), fine_amt);
+elseif (diff > 30) then
+set fine_amt = 15*5 + (diff - 30) * 50;
+insert into fine values(rno, curdate(), fine_amt);
+end if;
+update borrower set status = 'R' where rollin = rno and bname = bname;
+end;
+$
+
+delimiter ;
+
+call fine_calculation(3, 'clrs');
+
+select * from fine;
+select * from borrower;

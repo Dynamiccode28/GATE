@@ -1,0 +1,27 @@
+// showing
+show dbs
+use demodb2
+// creating collection
+db.createCollection("student")
+
+// inserting
+db.student.insert({"name":"def","id":12});
+db.student.insertMany([{"name":"abc","id":6},
+{"name":"jkl","id":10},
+{"name":"ghi","id":53},
+{"name":"lmn","id":20},
+{"name":"rst","id":7},
+{"name":"pqr","id":44},
+{"name":"xyz","id":43},
+]);
+
+// retrieving
+db.student.find();
+db.student.find({"name":"ghi"});
+
+// delete
+db.student.remove({"id":7});
+
+// update
+db.student.update({"id":53} , {$set:{"name":"uvw"}});
+db.student.find();
